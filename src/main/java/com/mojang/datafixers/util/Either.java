@@ -8,6 +8,7 @@ import com.mojang.datafixers.kinds.CocartesianLike;
 import com.mojang.datafixers.kinds.K1;
 import com.mojang.datafixers.kinds.Traversable;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -57,6 +58,18 @@ public abstract class Either<L, R> implements App<Either.Mu<R>, L> {
         @Override
         public Optional<R> right() {
             return Optional.empty();
+        }
+
+        @Nullable
+        @Override
+        public L leftOrNull() {
+            return value;
+        }
+
+        @Nullable
+        @Override
+        public R rightOrNull() {
+            return null;
         }
 
         @Override
@@ -120,6 +133,18 @@ public abstract class Either<L, R> implements App<Either.Mu<R>, L> {
             return Optional.of(value);
         }
 
+        @Nullable
+        @Override
+        public L leftOrNull() {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public R rightOrNull() {
+            return value;
+        }
+
         @Override
         public String toString() {
             return "Right[" + value + "]";
@@ -157,6 +182,12 @@ public abstract class Either<L, R> implements App<Either.Mu<R>, L> {
     public abstract Optional<L> left();
 
     public abstract Optional<R> right();
+
+    @Nullable
+    public abstract L leftOrNull();
+
+    @Nullable
+    public abstract R rightOrNull();
 
     public <T> Either<T, R> mapLeft(final Function<? super L, ? extends T> l) {
         return map(t -> left(l.apply(t)), Either::right);
